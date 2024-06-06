@@ -5,24 +5,32 @@ export default {
   components: { AssignmentList, AssignmentCreate },
   /*html*/
   template: `
-    <section class="space-y-6">
-      <assignment-list :assignments="filters.inProgress" title="In Progress"></assignment-list>
-      <assignment-list :assignments="filters.completed" title="Completed"></assignment-list>
+    <section class="flex gap-8">
+      <assignment-list :assignments="filters.inProgress" title="In Progress">
+        <assignment-create @add="add"></assignment-create>
+      </assignment-list>
+      <assignment-list 
+        v-if="showCompleted"
+        :assignments="filters.completed" 
+        can-Toggle 
+        title="Completed" 
+        @toggle="showCompleted = !showCompleted"
+       >
+      </assignment-list>
 
-      <assignment-create @add="add"></assignment-create>
+      <!-- <assignment-create @add="add"></assignment-create> -->
     
-
-
     </section>
     `,
 
   data() {
     return {
       assignments: [
-        { name: "Finish project", complete: false, id: 1, tag: "math" },
-        { name: "Read Chapter 4", complete: false, id: 2, tag: "science" },
-        { name: "Turn in Homeowork", complete: false, id: 3, tag: "math" },
+        // { name: "Finish project", complete: false, id: 1, tag: "math" },
+        // { name: "Read Chapter 4", complete: false, id: 2, tag: "science" },
+        // { name: "Turn in Homeowork", complete: false, id: 3, tag: "math" },
       ],
+      showCompleted: false,
 
       newAssignment : ''
     };
@@ -35,6 +43,12 @@ export default {
         completed : this.assignments.filter((assignment) => assignment.complete),
       }
     }
+  },
+
+  created() {
+    fetch('http://localhost:3000/assignment')
+    .then(response => response.json())
+    .then(assignments => {this.assignments = assignments})
   },
 
   methods: {

@@ -1,8 +1,9 @@
 export default {
+    /*html*/
     template: `
         <div class="flex gap-2">
             <button 
-            @click="$emit('change', tag)"
+            @click="$emit('update:currentTag', tag)"
             v-for="tag in tags" 
             class="border rounded px-1 py text-xs"
             :class="{
